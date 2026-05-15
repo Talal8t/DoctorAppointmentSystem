@@ -1,0 +1,91 @@
+﻿@model List<DAMS.ViewModels.AppointmentReportVM>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>📅 Appointment Reports</h2>
+
+<!-- FILTER -->
+<form method="get">
+    <select name="status">
+        <option value="">All</option>
+        <option value="Booked">Booked</option>
+        <option value="InProgress">In Progress</option>
+        <option value="Completed">Completed</option>
+    </select>
+
+    <button class="btn">Filter</button>
+</form>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Doctor</th>
+        <th>Patient</th>
+        <th>Status</th>
+    </tr>
+
+@foreach (var a in Model)
+{
+    <tr>
+        <td>@a.Date</td>
+        <td>@a.DoctorName</td>
+        <td>@a.PatientName</td>
+        <td>
+            <span class="status @(a.Status.ToLower())">
+                @a.Status
+            </span>
+        </td>
+    </tr>
+}
+</table>
+
+<style>
+body { background:#f4f6fb; font-family: Arial; }
+
+h2 { color:#0f172a; margin-bottom:15px; }
+
+table {
+    width:100%;
+    background:white;
+    border-collapse:collapse;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+th {
+    background:#0f172a;
+    color:white;
+    padding:12px;
+}
+
+td {
+    padding:12px;
+    border-bottom:1px solid #eee;
+}
+
+tr:hover {
+    background:#f1f5f9;
+}
+
+.btn {
+    padding:6px 12px;
+    background:#0ea5e9;
+    color:white;
+    border:none;
+    border-radius:6px;
+}
+
+.status {
+    padding:4px 10px;
+    border-radius:20px;
+    color:white;
+    font-size:12px;
+}
+
+.status.booked { background:#0ea5e9; }
+.status.inprogress { background:#facc15; color:#0f172a; }
+.status.completed { background:#22c55e; }
+</style>

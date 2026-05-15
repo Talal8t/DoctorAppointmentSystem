@@ -1,0 +1,38 @@
+﻿@model List<DAMS.Models.DoctorRequest>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    h2 {
+        color: #0f172a;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    body {
+        background: #f4f6fb;
+        font-family: Arial;
+    }
+</style>
+
+<h2>📊 Admin Dashboard</h2>
+
+<div class="card">
+    <h3>System Overview</h3>
+    <p>Hospital Management System Running</p>
+</div>
+
+<div class="card">
+    <h3>Quick Stats</h3>
+    <p>Pending Requests: @Model.Count</p>
+    <p>Status: Active</p>
+</div>

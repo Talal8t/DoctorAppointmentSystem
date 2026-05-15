@@ -1,0 +1,62 @@
+﻿@model List<DAMS.Models.Appointment>
+
+<table>
+    <thead>
+        <tr>
+            <th>Token</th>
+            <th>Patient</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.TokenNumber</td>
+                    <td>@item.PatientId</td>
+
+                    <td>
+                        @if (item.Status == "Booked")
+                        {
+                            <span class="badge booked">Booked</span>
+                        }
+                        else if (item.Status == "InProgress")
+                        {
+                            <span class="badge inprogress">In Progress</span>
+                        }
+                        else if (item.Status == "Completed")
+                        {
+                            <span class="badge completed">Completed</span>
+                        }
+                        else
+                        {
+                            <span>@item.Status</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Status == "Booked")
+                        {
+                            <a class="btn btn-success"
+                               href="@Url.Action("Chat", "Message", new { patientId = item.PatientId })">
+                                Message
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="btn btn-secondary">Message</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" style="text-align:center;">No patients in queue</td>
+            </tr>
+        }
+    </tbody>
+</table>

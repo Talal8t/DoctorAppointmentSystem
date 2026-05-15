@@ -1,0 +1,63 @@
+﻿@model List<DAMS.ViewModels.DoctorReportVM>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>👨‍⚕️ Doctor Reports</h2>
+
+<form method="get">
+    <select name="status">
+        <option value="">All</option>
+        <option value="active">Active Only</option>
+        <option value="inactive">Inactive Only</option>
+    </select>
+
+    <button class="btn">Filter</button>
+</form>
+
+<table>
+    <tr>
+        <th>Doctor</th>
+        <th>Total Patients</th>
+        <th>Status</th>
+    </tr>
+
+@foreach (var d in Model)
+{
+    <tr>
+        <td>@d.DoctorName</td>
+        <td>@d.TotalPatients</td>
+        <td>
+            <span class="@(d.IsActive ? "active" : "inactive")">
+                @(d.IsActive ? "Active" : "Inactive")
+            </span>
+        </td>
+    </tr>
+}
+</table>
+
+<style>
+table { width:100%; background:white; border-collapse:collapse; }
+th { background:#0f172a; color:white; padding:10px; }
+td { padding:10px; border-bottom:1px solid #eee; }
+
+.active {
+    background:#22c55e;
+    color:white;
+    padding:4px 10px;
+    border-radius:20px;
+}
+
+.inactive {
+    background:#ef4444;
+    color:white;
+    padding:4px 10px;
+    border-radius:20px;
+}
+
+.btn {
+    padding:6px 12px;
+    margin-bottom:10px;
+}
+</style>

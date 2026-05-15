@@ -1,0 +1,42 @@
+﻿@{
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<style>
+    .menu {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .box {
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+        text-align: center;
+        width: 200px;
+        cursor: pointer;
+    }
+
+        .box:hover {
+            background: #f1f5f9;
+        }
+</style>
+
+<h2>Slot Management</h2>
+<div class="menu">
+
+    <a href="/Doctor/CreateSlots">
+        <div class="box">
+            <h4>Generate Slots</h4>
+        </div>
+    </a>
+
+    <a href="/Doctor/TodaySlots">
+        <div class="box">
+            <h4>View Slots</h4>
+        </div>
+    </a>
+
+</div>

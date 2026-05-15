@@ -1,0 +1,244 @@
+﻿@using System.Linq
+@model List<DAMS.Models.Appointment>
+
+@{
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+
+    var total = Model?.Count ?? 0;
+    var upcoming = Model?.Count(x => x.Status == "Booked") ?? 0;
+    var completed = Model?.Count(x => x.Status == "Completed") ?? 0;
+
+    var todayAppointments = ViewBag.TodayAppointments as IEnumerable<DAMS.Models.Appointment>;
+}
+
+<style>
+    body {
+        background: #f4f6fb;
+        font-family: Arial, sans-serif;
+    }
+
+    h2, h3 {
+        margin-left: 10px;
+    }
+
+    /* CARDS */
+    .stats-container {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 3px 12px rgba(0,0,0,0.08);
+        transition: 0.3s ease;
+        flex: 1;
+    }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 6px 18px rgba(0,0,0,0.12);
+        }
+
+        .card p {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+    /* TABLE */
+    .table-container {
+        margin-top: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0px 3px 12px rgba(0,0,0,0.08);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    th {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    /* STATUS */
+    .status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .booked {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .completed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .cancelled {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    /* DOCTOR BUTTONS */
+    .doctor-tab {
+        padding: 10px 14px;
+        border: none;
+        background: #0f172a;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .doctor-tab:hover {
+            background: #38bdf8;
+            color: black;
+        }
+
+    #liveQueueContainer {
+        margin-top: 10px;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    a {
+        text-decoration: none;
+        color: #0ea5e9;
+    }
+</style>
+
+<script>
+        function showQueue(doctorId) {
+        fetch(`/Patient/LiveQueue?doctorId=${doctorId}`)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("liveQueueContainer").innerHTML = html;
+            });
+    }
+</script>
+
+<h2>Welcome Back 👋</h2>
+
+<!-- STATS -->
+<div class="stats-container">
+    <div class="card">
+        <h4>Total Appointments</h4>
+        <p>@total</p>
+    </div>
+
+    <div class="card">
+        <h4>Upcoming</h4>
+        <p>@upcoming</p>
+    </div>
+
+    <div class="card">
+        <h4>Completed</h4>
+        <p>@completed</p>
+    </div>
+</div>
+
+<hr />
+
+<!-- LIVE QUEUE -->
+@if (todayAppointments != null && todayAppointments.Any())
+{
+    <h3>🔴 Live Queue (Today)</h3>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        @foreach (var doc in todayAppointments.Select(x => x.DoctorId).Distinct())
+        {
+            <button class="doctor-tab" onclick="showQueue(@doc)">
+                Doctor @doc
+            </button>
+        }
+    </div>
+
+    <div id="liveQueueContainer" class="table-container">
+        <p>Select a doctor to view live queue</p>
+    </div>
+
+    <hr />
+}
+
+<!-- APPOINTMENTS TABLE (ALWAYS VISIBLE) -->
+<h3>My Appointments</h3>
+
+@if (total == 0)
+{
+    <div class="card">
+        <p><strong>No appointments found.</strong></p>
+        <a href="/Patient/BookAppointment">📅 Book Your First Appointment</a>
+    </div>
+}
+else
+{
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Token</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.AppointmentId</td>
+                    <td>@item.AppointmentDate.ToString("dd MMM yyyy")</td>
+                    <td>
+                        <span class="status @item.Status.ToLower()">
+                            @item.Status
+                        </span>
+                    </td>
+                    <td>#@item.TokenNumber</td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+<hr />
+
+<h3>Quick Actions</h3>
+
+<a href="/Patient/BookAppointment">📅 Book Appointment</a>
+<br />
+<a href="/Patient/MyAppointments">📋 My Appointments</a>
+<br />
+<a href="/Auth/Logout">🚪 Logout</a>

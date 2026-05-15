@@ -1,0 +1,211 @@
+﻿@model List<DAMS.Models.Appointment>
+
+@{
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+    var selectedStatus = ViewBag.SelectedStatus as string ?? "All";
+}
+
+<style>
+    .page-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .table-container {
+        width: 95%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #0f172a;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background-color: #f9fafb;
+    }
+
+    .status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .booked {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .cancelled {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .completed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .missed {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 2px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .btn-cancel {
+        background: #ef4444;
+        color: white;
+    }
+
+    .btn-reschedule {
+        background: #0ea5e9;
+        color: white;
+    }
+
+    .btn-message {
+        background: #16a34a;
+        color: white;
+    }
+
+    .btn-disabled {
+        background: #ccc;
+        color: #666;
+        pointer-events: none;
+    }
+</style>
+
+<h2 class="page-title">My Appointments</h2>
+
+<!-- ✅ FILTER DROPDOWN -->
+<div style="width:95%; margin:auto; margin-bottom:15px; text-align:right;">
+    <form method="get" action="/Patient/MyAppointments">
+
+        <select name="status" onchange="this.form.submit()" style="padding:8px; border-radius:6px;">
+            <option value="All" selected="@(selectedStatus == "All")">All</option>
+            <option value="Booked" selected="@(selectedStatus == "Booked")">Booked</option>
+            <option value="Cancelled" selected="@(selectedStatus == "Cancelled")">Cancelled</option>
+            <option value="Missed" selected="@(selectedStatus == "Missed")">Missed</option>
+            <option value="Completed" selected="@(selectedStatus == "Completed")">Completed</option>
+        </select>
+
+    </form>
+</div>
+
+<div class="table-container">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Token</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Doctor.DoctorName</td>
+                    <td>@item.AppointmentDate</td>
+                    <td>#@item.TokenNumber</td>
+
+                    <td>
+                        <span class="status
+                            @(item.Status == "Booked" ? "booked" :
+                              item.Status == "Cancelled" ? "cancelled" :
+                              item.Status == "Missed" ? "missed" :
+                              "completed")">
+                            @item.Status
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <!-- CANCEL -->
+                        @if (item.Status == "Booked")
+                        {
+                            <a class="btn btn-cancel"
+                               href="@Url.Action("CancelAppointment", "Patient", new { id = item.AppointmentId })"
+                               onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                Cancel
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="btn btn-disabled">Cancel</span>
+                        }
+
+                        <!-- RESCHEDULE -->
+                        @if (item.Status == "Cancelled")
+                        {
+                            <a class="btn btn-reschedule"
+                               href="/Patient/Reschedule/@item.AppointmentId">
+                                Reschedule
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="btn btn-disabled">N/A</span>
+                        }
+
+                        @if (item.Status == "Booked")
+                        {
+                            <a class="btn btn-message"
+                               href="@Url.Action("Chat", "Message", new { doctorId = item.DoctorId })">
+                                Message
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="btn btn-disabled">Message</span>
+                        }
+
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" style="text-align:center; padding:20px;">
+                    No appointments found
+                </td>
+            </tr>
+        }
+        </tbody>
+
+    </table>
+
+</div>

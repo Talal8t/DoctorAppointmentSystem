@@ -1,0 +1,76 @@
+﻿@model List<DAMS.ViewModels.PatientReportVM>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>🧑‍🤝‍🧑 Patient Reports</h2>
+
+<!-- FILTER -->
+<form method="get">
+    <input type="text" name="name" placeholder="Search Patient..." />
+
+    <button class="btn">Filter</button>
+</form>
+
+<table>
+    <tr>
+        <th>Patient</th>
+        <th>Total Visits</th>
+        <th>Department</th>
+    </tr>
+
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.PatientName</td>
+            <td>@p.TotalVisits</td>
+            <td>@p.Department</td>
+        </tr>
+    }
+</table>
+
+<style>
+    body {
+        background: #f4f6fb;
+        font-family: Arial;
+    }
+
+    h2 {
+        color: #0f172a;
+        margin-bottom: 15px;
+    }
+
+    table {
+        width: 100%;
+        background: white;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    th {
+        background: #0f172a;
+        color: white;
+        padding: 12px;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background: #f1f5f9;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        background: #0ea5e9;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>

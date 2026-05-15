@@ -1,0 +1,78 @@
+﻿@model DAMS.Models.Patient
+
+@{
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="card" style="max-width:600px; margin:auto;">
+
+    <h2 style="text-align:center; margin-bottom:20px;">👤 My Profile</h2>
+
+    <form asp-action="Profile" method="post">
+
+        <!-- Hidden fields (important for update) -->
+        <input type="hidden" asp-for="PatientId" />
+        <input type="hidden" asp-for="UserId" />
+
+        <div style="margin-bottom:15px;">
+            <label>Full Name</label>
+            <input asp-for="PatientName" class="form-control" placeholder="Enter your name" />
+            <span asp-validation-for="PatientName" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>City</label>
+            <input asp-for="City" class="form-control" placeholder="Enter your city" />
+            <span asp-validation-for="City" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Phone</label>
+            <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
+            <span asp-validation-for="Phone" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Gender</label>
+            <select asp-for="Gender" class="form-control">
+                <option value="">-- Select Gender --</option>
+                <option value="Male" selected="@(Model.Gender == "Male")">Male</option>
+                <option value="Female" selected="@(Model.Gender == "Female")">Female</option>
+            </select>
+            <span asp-validation-for="Gender" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Date of Birth</label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <span asp-validation-for="DateOfBirth" style="color:red"></span>
+        </div>
+
+        <button type="submit"
+                style="width:100%; padding:12px; background:#38bdf8; border:none; color:white; border-radius:8px; font-weight:bold;">
+            💾 Update Profile
+        </button>
+
+    </form>
+
+</div>
+
+<!-- SUCCESS MESSAGE -->
+@if (TempData["Success"] != null)
+{
+    <div style="text-align:center; margin-top:15px; color:green;">
+        @TempData["Success"]
+    </div>
+}
+
+<!-- ERROR MESSAGE -->
+@if (ViewBag.Error != null)
+{
+    <div style="text-align:center; margin-top:15px; color:red;">
+        @ViewBag.Error
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

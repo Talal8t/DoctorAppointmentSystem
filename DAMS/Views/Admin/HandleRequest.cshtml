@@ -1,0 +1,70 @@
+﻿@model DAMS.Models.DoctorRequest
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    body {
+        background: #f4f6fb;
+        font-family: Arial;
+    }
+
+    h2 {
+        color: #0f172a;
+        margin-bottom: 15px;
+    }
+
+    .card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .btn {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        background: #22c55e;
+        color: white;
+    }
+
+    .btn-danger {
+        background: #ef4444;
+        color: white;
+    }
+</style>
+
+<h2>⚙️ Handle Request</h2>
+
+<div class="card">
+    <p><b>Doctor:</b> @Model.DoctorId</p>
+    <p><b>Type:</b> @Model.RequestType</p>
+    <p><b>Status:</b> @Model.Status</p>
+</div>
+
+@if (Model.RequestType == "StartOPD")
+{
+    <form method="post" action="/Admin/ConfirmStartOPD">
+        <input type="hidden" name="requestId" value="@Model.RequestId" />
+        <input type="hidden" name="doctorId" value="@Model.DoctorId" />
+
+        <button class="btn btn-success">Start OPD</button>
+    </form>
+}
+
+@if (Model.RequestType == "StopOPD")
+{
+    <form method="post" action="/Admin/ConfirmStopOPD">
+        <input type="hidden" name="requestId" value="@Model.RequestId" />
+        <input type="hidden" name="doctorId" value="@Model.DoctorId" />
+
+        <button class="btn btn-danger">Stop OPD</button>
+    </form>
+}

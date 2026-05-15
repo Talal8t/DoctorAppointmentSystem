@@ -1,0 +1,156 @@
+﻿@model DAMS.Models.Appointment
+@{
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+@section scripts {
+    <script>
+
+        function loadDoctors() {
+            var deptId = document.getElementById("DepartmentId").value;
+
+            fetch('/Patient/GetDoctorsByDepartment?departmentId=' + deptId)
+                .then(res => res.text())
+                .then(data => {
+                    document.getElementById("DoctorId").innerHTML = data;
+                });
+        }
+
+                function loadSlots() {
+
+            var doctorId = document.getElementById("DoctorId").value;
+            var date = document.getElementById("newDate").value;
+
+            if (!doctorId || !date) return;
+
+            fetch(`/Patient/GetSlots?doctorId=${doctorId}&date=${encodeURIComponent(date)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("slotContainer").innerHTML = html;
+                })
+                .catch(err => console.log("Error loading slots:", err));
+        }
+
+                        let selectedSlotId = null;
+
+        function selectSlot(slotId) {
+
+            selectedSlotId = slotId;
+            document.getElementById("SlotId").value = slotId;
+
+            // remove previous selection
+            document.querySelectorAll(".slot-btn").forEach(btn => {
+                btn.classList.remove("selected-slot");
+            });
+
+            // add selection
+            let btn = document.getElementById("slot-" + slotId);
+            if (btn) {
+                btn.classList.add("selected-slot");
+            }
+        }
+
+
+    </script>
+}
+<h2>Reschedule Appointment</h2>
+
+<div class="card" style="padding:15px; background:white; border-radius:10px; margin-bottom:20px;">
+
+    <h3>Current Appointment</h3>
+
+    <p><b>Doctor ID:</b> @Model.DoctorId</p>
+    <p><b>Current Date:</b> @Model.AppointmentDate</p>
+    <p><b>Token:</b> @Model.TokenNumber</p>
+    <p><b>Status:</b> @Model.Status</p>
+
+</div>
+
+<form method="post" onsubmit="return validateForm()">
+
+    <input type="hidden" name="AppointmentId" value="@Model.AppointmentId" />
+    <input type="hidden" id="DoctorId" name="DoctorId" value="@Model.DoctorId" />
+    <input type="hidden" name="SlotId" id="SlotId" />
+
+    <label><b>Select New Date</b></label>
+    <input type="date"
+    <input type="date"
+           id="newDate"
+           name="AppointmentDate"
+           onchange="loadSlots()" />
+
+    <br /><br />
+
+    <h3>Available Slots</h3>
+
+    <div id="slotContainer">
+        <p>Please select a date to load available slots</p>
+    </div>
+
+    <br />
+
+    <button type="submit">Reschedule Appointment</button>
+
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <p style="color:red">@ViewBag.Error</p>
+}
+
+<script>
+
+    // 🚫 prevent past date selection
+    document.getElementById("newDate").min =
+        new Date().toISOString().split("T")[0];
+
+    // 📦 load slots for selected date
+    function loadSlots() {
+
+        var doctorId = @Model.DoctorId;
+        var date = document.getElementById("newDate").value;
+
+        if (!date) return;
+
+        fetch(`/Patient/GetSlots?doctorId=${doctorId}&date=${date}`)
+            .then(res => res.text())
+            .then(data => {
+                document.getElementById("slotContainer").innerHTML = data;
+            });
+    }
+
+    // 🎯 select single slot
+    function selectSlot(slotId) {
+
+        document.getElementById("SlotId").value = slotId;
+
+        // visual highlight reset
+        document.querySelectorAll(".slot-btn").forEach(b => {
+            b.style.background = "";
+            b.style.color = "";
+        });
+
+        // highlight selected
+        var btn = document.getElementById("slot-" + slotId);
+        if (btn) {
+            btn.style.background = "#38bdf8";
+            btn.style.color = "white";
+        }
+    }
+
+    // 🛡️ form validation
+    function validateForm() {
+
+        if (!document.getElementById("newDate").value) {
+            alert("Please select a date");
+            return false;
+        }
+
+        if (!document.getElementById("SlotId").value) {
+            alert("Please select a slot");
+            return false;
+        }
+
+        return true;
+    }
+
+</script>

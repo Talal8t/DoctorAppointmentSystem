@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f6fb;
+        }
+
+        .layout {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            width: 240px;
+            background: #0f172a;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar a:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>🏥 Admin Panel</h2>
+
+        <a href="/Admin/Dashboard">📊 Dashboard</a>
+        <a href="/Admin/Requests">📥 Requests</a>
+        <a href="/Admin/OPDMonitor">🏥 OPD Management</a>
+        <a href="/Admin/Reports">📊 Reports</a>
+        <a href="/Message/Chat">💬 Messages</a>
+        <a href="/Auth/Logout">🚪 Logout</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        @RenderBody()
+    </div>
+
+</div>
+
+</body>
+</html>

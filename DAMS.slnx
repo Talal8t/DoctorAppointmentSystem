@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ClientD/ClientD.csproj" Id="ab1a5b47-f87c-45e3-833b-807e0b076d81" />
+  <Project Path="DAMS/DAMS.csproj" />
+  <Project Path="Server/Server.csproj" />
+</Solution>

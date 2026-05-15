@@ -1,0 +1,100 @@
+﻿@model List<DAMS.Models.DoctorSlot>
+
+@{
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<style>
+    .table-container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #0f172a;
+        color: white;
+        padding: 10px;
+    }
+
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+    }
+
+    .available {
+        background: #dcfce7;
+    }
+
+    .closed {
+        background: #fee2e2;
+    }
+</style>
+
+<h2>Today's Slots 📅</h2>
+
+<div class="table-container">
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Slot ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var slot in Model)
+                {
+                    <tr>
+                        <td>@slot.SlotId</td>
+                        <td>@slot.SlotDate.ToString("yyyy-MM-dd")</td>
+                        <td>@slot.SlotTime</td>
+
+                        <td>
+                            @if (slot.Status == "Available")
+                            {
+                                <span class="badge available">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge closed">@slot.Status</span>
+                            }
+                        </td>
+
+                        <td>
+                            <form method="post" action="/Doctor/CloseSlot">
+                                <input type="hidden" name="slotId" value="@slot.SlotId" />
+                                <button class="btn btn-danger">Close</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    }
+    else
+    {
+        <p>No slots available for today.</p>
+    }
+
+</div>

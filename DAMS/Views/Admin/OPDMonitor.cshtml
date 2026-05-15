@@ -1,0 +1,158 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model List<DAMS.Models.Doctor>
+
+<h2>🏥 OPD Monitor</h2>
+
+<!-- TOP ACTIONS -->
+<div class="top-bar">
+    <a href="/Admin/OPDSummary" class="btn btn-primary">📊 View Summary</a>
+</div>
+
+<!-- SUMMARY CARDS -->
+@if (ViewBag.Summary != null)
+{
+    <div class="summary">
+        <div class="card">
+            <h4>Active Doctors</h4>
+            <p>@ViewBag.Summary.ActiveDoctors</p>
+        </div>
+        <div class="card">
+            <h4>Total Queues</h4>
+            <p>@ViewBag.Summary.TotalQueues</p>
+        </div>
+        <div class="card">
+            <h4>Total Patients</h4>
+            <p>@ViewBag.Summary.TotalPatients</p>
+        </div>
+    </div>
+}
+
+<!-- DOCTOR TABLE -->
+<table>
+    <tr>
+        <th>Doctor</th>
+        <th>Status</th>
+        <th>Queue</th>
+    </tr>
+
+    @foreach (var d in Model)
+    {
+        <tr>
+            <td>@d.DoctorName</td>
+
+            <td>
+                <span class="badge active">Active</span>
+            </td>
+
+            <td>
+                <a class="btn btn-view" href="/Admin/DoctorQueue?doctorId=@d.DoctorId">
+                    View Queue
+                </a>
+            </td>
+        </tr>
+    }
+</table>
+
+<style>
+    body {
+        font-family: Arial;
+        background: #f4f6fb;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+        margin-bottom: 15px;
+    }
+
+    /* SUMMARY */
+    .summary {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        flex: 1;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+        .card h4 {
+            margin-bottom: 5px;
+            color: #0f172a;
+        }
+
+        .card p {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+    /* TABLE */
+    table {
+        width: 100%;
+        background: white;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    }
+
+    th {
+        background: #0f172a;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background: #f1f5f9;
+    }
+
+    /* BADGE */
+    .badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        color: white;
+        font-size: 12px;
+    }
+
+    .active {
+        background: #22c55e;
+    }
+
+    /* BUTTONS */
+    .btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .btn-primary {
+        background: #0ea5e9;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #0284c7;
+        }
+
+    .btn-view {
+        background: #22c55e;
+        color: white;
+    }
+
+        .btn-view:hover {
+            background: #16a34a;
+        }
+</style>

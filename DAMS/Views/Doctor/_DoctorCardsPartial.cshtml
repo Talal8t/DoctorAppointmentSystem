@@ -1,0 +1,63 @@
+﻿@model DAMS.ViewModels.DoctorDashboardVM
+
+<div class="card-container">
+
+    @* <!-- LAST -->
+    <div class="card">
+        <h4>Last Patient</h4>
+        @if (Model.Last != null)
+        {
+            <p class="token">#@Model.Last.TokenNumber</p>
+            <p>Patient: @Model.Last.PatientId</p>
+        }
+        else
+        {
+            <p>No data</p>
+        }
+    </div> *@
+
+    <!-- CURRENT -->
+    <div class="card">
+        <h4>Current Patient</h4>
+
+        @if (Model.Current != null)
+        {
+            <p class="token">#@Model.Current.TokenNumber</p>
+            <p>Patient: @Model.Current.PatientId</p>
+
+            <form method="post" action="/Doctor/MarkCompleted">
+                <input type="hidden" name="appointmentId" value="@Model.Current.AppointmentId" />
+                <button class="btn btn-success">Completed</button>
+            </form>
+
+            <form method="post" action="/Doctor/MarkMissed">
+                <input type="hidden" name="appointmentId" value="@Model.Current.AppointmentId" />
+                <button class="btn btn-danger">Missed</button>
+            </form>
+        }
+        else
+        {
+            <p>No active patient</p>
+        }
+    </div>
+
+    <!-- NEXT -->
+    <div class="card">
+        <h4>Next Patient</h4>
+
+        @if (Model.Next != null)
+        {
+            <p class="token">#@Model.Next.TokenNumber</p>
+            <p>Patient: @Model.Next.PatientId</p>
+
+            <form method="post" action="/Doctor/CallNext">
+                <button class="btn btn-primary">Call Next</button>
+            </form>
+        }
+        else
+        {
+            <p>No waiting patient</p>
+        }
+    </div>
+
+</div>

@@ -1,0 +1,20 @@
+@model List<DAMS.Models.Notification>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var n in Model)
+    {
+        <div class="notification-item">
+            <div>@n.Message</div>
+            <small style="color:gray;">
+                @n.CreatedAt.ToString("hh:mm tt")
+            </small>
+        </div>
+    }
+}
+else
+{
+    <div class="notification-item">
+        No new notifications
+    </div>
+}

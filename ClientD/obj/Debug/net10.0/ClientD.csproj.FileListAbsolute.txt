@@ -1,0 +1,14 @@
+D:\DAMS\ClientD\bin\Debug\net10.0\ClientD.exe
+D:\DAMS\ClientD\bin\Debug\net10.0\ClientD.deps.json
+D:\DAMS\ClientD\bin\Debug\net10.0\ClientD.runtimeconfig.json
+D:\DAMS\ClientD\bin\Debug\net10.0\ClientD.dll
+D:\DAMS\ClientD\bin\Debug\net10.0\ClientD.pdb
+D:\DAMS\ClientD\obj\Debug\net10.0\ClientD.GeneratedMSBuildEditorConfig.editorconfig
+D:\DAMS\ClientD\obj\Debug\net10.0\ClientD.AssemblyInfoInputs.cache
+D:\DAMS\ClientD\obj\Debug\net10.0\ClientD.AssemblyInfo.cs
+D:\DAMS\ClientD\obj\Debug\net10.0\ClientD.csproj.CoreCompileInputs.cache
+D:\DAMS\ClientD\obj\Debug\net10.0\ClientD.dll
+D:\DAMS\ClientD\obj\Debug\net10.0\refint\ClientD.dll
+D:\DAMS\ClientD\obj\Debug\net10.0\ClientD.pdb
+D:\DAMS\ClientD\obj\Debug\net10.0\ClientD.genruntimeconfig.cache
+D:\DAMS\ClientD\obj\Debug\net10.0\ref\ClientD.dll

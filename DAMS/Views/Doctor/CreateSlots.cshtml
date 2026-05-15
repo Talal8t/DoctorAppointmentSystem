@@ -1,0 +1,85 @@
+﻿@{
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<style>
+    .form-box {
+        width: 400px;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .btn {
+        margin-top: 15px;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        border-radius: 6px;
+        background: #0ea5e9;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+<script id="date_validation">
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateInput = document.querySelector('input[name="date"]');
+
+        const today = new Date();
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + 7);
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        dateInput.min = formatDate(today);
+        dateInput.max = formatDate(maxDate);
+    });
+</script>
+<script id="time_validation">
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const start = document.querySelector('[name="startTime"]').value;
+        const end = document.querySelector('[name="endTime"]').value;
+
+        if (start >= end) {
+            alert("End time must be greater than start time");
+            e.preventDefault();
+        }
+    });
+</script>
+<h2>Generate Slots 🧩</h2>
+
+<div class="form-box">
+
+    <form method="post" action="/Doctor/CreateSlots">
+
+        <label>Date</label>
+        <input type="date" name="date" required />
+
+        <label>Start Time</label>
+        <input type="time" name="startTime" min="10:00" max="20:00" required />
+       
+        <label>End Time</label>
+        <input type="time" name="endTime" min="10:00" max="20:00" required />
+
+        <button class="btn">Generate Slots</button>
+
+    </form>
+
+</div>

@@ -1,0 +1,214 @@
+﻿@model DAMS.ViewModels.DoctorDashboardVM
+
+@{
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<style>
+    body {
+        background: #f4f6fb;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        margin: 0;
+        color: #0f172a;
+    }
+
+    h2 {
+        margin-bottom: 12px;
+        font-size: 26px;
+    }
+
+    h3 {
+        margin: 20px 0 10px;
+        font-size: 20px;
+        color: #1e293b;
+    }
+
+    /* FILTER BUTTONS */
+    .btn {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-right: 6px;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 500;
+        transition: 0.2s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+    .btn-primary {
+        background: #0ea5e9;
+        color: white;
+    }
+
+    .btn-warning {
+        background: #facc15;
+        color: #111;
+    }
+
+    .btn-success {
+        background: #22c55e;
+        color: white;
+    }
+
+    /* CARD SECTION */
+    #cardsContainer {
+        margin-top: 10px;
+    }
+
+    .card-container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        flex: 1;
+        min-width: 240px;
+        background: white;
+        padding: 18px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        text-align: center;
+        transition: 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h4 {
+            margin-bottom: 10px;
+            color: #334155;
+        }
+
+    .token {
+        font-size: 22px;
+        font-weight: bold;
+        color: #0f172a;
+    }
+
+    /* QUEUE BOX */
+    #queueContainer {
+        background: white;
+        padding: 15px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        overflow-x: auto;
+    }
+
+    /* TABLE */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 500px;
+    }
+
+    th {
+        background: #0f172a;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+    }
+
+    tr:hover {
+        background: #f8fafc;
+    }
+
+    /* STATUS BADGES */
+    .badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .booked {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .inprogress {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .completed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    /* LAYOUT SPACING */
+    hr {
+        margin: 20px 0;
+        border: none;
+        border-top: 1px solid #e2e8f0;
+    }
+</style>
+<h2>Doctor Dashboard 🩺</h2>
+
+<!-- FILTERS -->
+@* <div style="margin-bottom:10px;">
+    <a href="?filter=today" class="btn btn-primary">Today</a>
+    <a href="?filter=booked" class="btn btn-warning">Booked</a>
+    <a href="?filter=completed" class="btn btn-success">Completed</a>
+</div> *@
+<div class="opd-controls">
+
+    <form method="post" action="/Doctor/RequestStartOPD" style="display:inline;">
+        <button class="btn btn-primary">
+            🔵 Request Start OPD
+        </button>
+    </form>
+
+    <form method="post" action="/Doctor/RequestStopOPD" style="display:inline;">
+        <button class="btn btn-danger">
+            🔴 Request Stop OPD
+        </button>
+    </form>
+
+</div>
+<!-- CARDS -->
+<div id="cardsContainer">
+    @await Html.PartialAsync("_DoctorCardsPartial", Model)
+</div>
+
+<hr />
+
+<!-- QUEUE -->
+<h3>Live Queue</h3>
+
+<div id="queueContainer">
+    @await Html.PartialAsync("_DoctorQueuePartial", Model.TodayAppointments)
+</div>
+
+<script>
+    function refreshDashboard() {
+
+        fetch('/Doctor/RefreshQueue')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("queueContainer").innerHTML = html;
+            });
+
+        fetch('/Doctor/RefreshCards')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("cardsContainer").innerHTML = html;
+            });
+    }
+
+    setInterval(refreshDashboard, 3000);
+</script>

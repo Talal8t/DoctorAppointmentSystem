@@ -1,0 +1,55 @@
+﻿@model List<DAMS.Models.DoctorSlot>
+
+@if (Model == null || !Model.Any())
+{
+    <p style="color:red;">No slots available</p>
+}
+else
+{
+    <div class="table-container">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.SlotTime</td>
+
+                        <td>
+                            <span class="status
+                                    @(s.Status == "Available" ? "booked" : "cancelled")">
+                                @s.Status
+                            </span>
+                        </td>
+
+                        <td>
+                            @if (s.Status == "Available")
+                            {
+                                <button type="button"
+                                        id="slot-@s.SlotId"
+                                        class="btn btn-reschedule slot-btn"
+                                        onclick="selectSlot(@s.SlotId)">
+                                    Select
+                                </button>
+                            }
+                            else
+                            {
+                                <span class="btn btn-disabled">Unavailable</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+}

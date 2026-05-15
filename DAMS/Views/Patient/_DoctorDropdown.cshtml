@@ -1,0 +1,11 @@
+﻿@model List<DAMS.Models.Doctor>
+
+<option value="">Select Doctor</option>
+
+@if (Model != null)
+{
+    foreach (var d in Model)
+    {
+        <option value="@d.DoctorId">@d.DoctorName (@d.Specialization)</option>
+    }
+}

@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard</title>
+
+    <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background: #f4f6fb;
+            }
+
+            /* TOP BAR */
+            .topbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 55px;
+                background: white;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 15px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+                z-index: 1000;
+            }
+
+            .menu-btn {
+                font-size: 22px;
+                background: #0f172a;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+                .menu-btn:hover {
+                    background: #38bdf8;
+                    color: #0f172a;
+                }
+
+            /* RIGHT SIDE TOPBAR */
+            .right-actions {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            /* NOTIFICATION */
+            .notification-wrapper {
+                position: relative;
+            }
+
+            .bell {
+                cursor: pointer;
+                font-size: 22px;
+                position: relative;
+            }
+
+            .notif-count {
+                position: absolute;
+                top: -6px;
+                right: -10px;
+                background: red;
+                color: white;
+                font-size: 11px;
+                padding: 2px 6px;
+                border-radius: 50%;
+            }
+
+            .notif-dropdown {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 40px;
+                width: 280px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+                padding: 10px;
+                z-index: 2000;
+            }
+
+            .notification-item {
+                padding: 8px;
+                border-bottom: 1px solid #eee;
+                font-size: 14px;
+            }
+
+                .notification-item:hover {
+                    background: #f1f5f9;
+                }
+
+            .mark-btn {
+                width: 100%;
+                margin-top: 8px;
+                padding: 6px;
+                background: #0ea5e9;
+                border: none;
+                color: white;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+            /* LAYOUT */
+            .container {
+                display: flex;
+                height: 100vh;
+                margin-top: 55px;
+            }
+
+            /* SIDEBAR */
+            .sidebar {
+                position: fixed;
+                top: 55px;
+                bottom: 0;
+                left: 0;
+                width: 240px;
+                background: linear-gradient(180deg, #0f172a, #1e293b);
+                color: white;
+                padding: 20px;
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+            }
+
+                .sidebar.hidden {
+                    transform: translateX(-100%);
+                }
+
+                .sidebar h3 {
+                    text-align: center;
+                    color: #38bdf8;
+                    margin-bottom: 25px;
+                }
+
+                .sidebar a {
+                    display: block;
+                    color: #cbd5e1;
+                    text-decoration: none;
+                    padding: 12px;
+                    margin: 8px 0;
+                    border-radius: 8px;
+                    transition: 0.3s;
+                }
+
+                    .sidebar a:hover {
+                        background: #38bdf8;
+                        color: #0f172a;
+                        transform: translateX(6px);
+                    }
+
+            /* CONTENT */
+            .content {
+                flex: 1;
+                padding: 25px;
+                margin-left: 245px;
+                transition: margin-left 0.3s ease;
+            }
+
+                .content.full {
+                    margin-left: 0;
+                }
+    </style>
+
+    <script>
+            let sidebarVisible = true;
+
+                        function toggleSidebar() {
+                const sidebar = document.querySelector(".sidebar");
+                const content = document.querySelector(".content");
+
+                sidebar.classList.toggle("hidden");
+                content.classList.toggle("full");
+            }
+
+            function toggleNotifications() {
+                const dropdown = document.getElementById("notifDropdown");
+                dropdown.style.display =
+                    dropdown.style.display === "block" ? "none" : "block";
+            }
+
+            function loadNotifications() {
+
+                fetch('/Notification/GetNotifications')
+                    .then(r => r.text())
+                    .then(html => {
+                        document.getElementById("notifContainer").innerHTML = html;     
+                    });
+
+                fetch('/Notification/GetCount')
+                    .then(r => r.text())
+                    .then(count => {
+                        document.getElementById("notifCount").innerText = count;
+                    });
+            }
+
+            function markAllRead() {
+                fetch('/Notification/MarkRead', { method: 'POST' })
+                    .then(() => loadNotifications());
+            }
+
+            setInterval(loadNotifications, 3000);
+            loadNotifications();
+    </script>
+</head>
+
+<body>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+        <button onclick="toggleSidebar()" class="menu-btn">☰</button>
+
+        <div class="right-actions">
+
+            <!-- NOTIFICATIONS -->
+            <div class="notification-wrapper">
+
+                <div class="bell" onclick="toggleNotifications()">
+                    🔔
+                    <span id="notifCount" class="notif-count">0</span>
+                </div>
+
+                <div id="notifDropdown" class="notif-dropdown">
+
+                    <div id="notifContainer">
+                        Loading...
+                    </div>
+
+                    <button onclick="markAllRead()" class="mark-btn">
+                        Mark all as read
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h3>Patient Panel</h3>
+
+            <a href="/Patient/Dashboard">🏠 Dashboard</a>
+            <a href="/Patient/Profile">👤 My Profile</a>
+            <a href="/Patient/BookAppointment">📅 Book Appointment</a>
+            <a href="/Patient/MyAppointments">📋 My Appointments</a>
+            <a href="/Patient/MyAppointments">💬 Messages</a>
+            <a href="/Message/Broadcasts">📢 Broadcast Messages</a>
+            <a href="/Auth/Logout">🚪 Logout</a>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            @RenderBody()
+        </div>
+
+    </div>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

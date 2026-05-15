@@ -1,0 +1,16 @@
+﻿@model dynamic
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>📊 OPD Summary</h2>
+
+<div class="card">
+    <p>Active Doctors: @Model.ActiveDoctors</p>
+    <p>Total Queues: @Model.TotalQueues</p>
+    <p>Total Patients: @Model.TotalPatients</p>
+</div>
+
+<style>
+body { font-family: Arial; background:#f4f6fb; }
+.card { background:white; padding:20px; border-radius:10px; }
+</style>

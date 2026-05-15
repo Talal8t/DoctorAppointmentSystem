@@ -1,0 +1,58 @@
+﻿@model DAMS.Models.Patient
+
+@{
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+
+    <h2 style="text-align:center; margin-bottom:20px;">Complete Your Profile 🏥</h2>
+
+    <form asp-action="CompletePatientProfile" method="post">
+
+        <div style="margin-bottom:15px;">
+            <label>Full Name</label>
+            <input asp-for="PatientName" class="form-control" />
+            <span asp-validation-for="PatientName" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>City</label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Phone</label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Gender</label>
+            <select asp-for="Gender" class="form-control">
+                <option value="">-- Select Gender --</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <span asp-validation-for="Gender" style="color:red"></span>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label>Date of Birth</label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <span asp-validation-for="DateOfBirth" style="color:red"></span>
+        </div>
+
+        <button type="submit"
+                style="width:100%; padding:12px; background:#38bdf8; border:none; color:white; border-radius:8px; cursor:pointer;">
+            Save Profile
+        </button>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

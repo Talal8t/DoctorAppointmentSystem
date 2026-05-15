@@ -1,0 +1,134 @@
+﻿@model List<DAMS.Models.DoctorRequest>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .filter-dropdown {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+}
+
+.filter-dropdown:hover {
+    border-color: #0ea5e9;
+}
+
+.filter-dropdown:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 2px rgba(14,165,233,0.2);
+}
+    body {
+        background: #f4f6fb;
+        font-family: Arial;
+    }
+
+    h2 {
+        color: #0f172a;
+        margin-bottom: 15px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    th {
+        background: #0f172a;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background: #f1f5f9;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-primary { background: #0ea5e9; color: white; }
+    .btn-warning { background: #f59e0b; color: white; }
+    button:disabled {
+    background: #cbd5e1 !important;
+    color: #64748b !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+    .filter-bar {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+}
+</style>
+
+<h2>📥 OPD Requests</h2>
+<div class="filter-bar">
+    <form method="get" action="/Admin/Requests">
+        <select name="status" class="filter-dropdown" onchange="this.form.submit()">
+            <option value="">All Requests</option>
+           <option value="Pending" selected="@(ViewBag.CurrentFilter == "Pending")">Pending</option>
+<option value="Approved" selected="@(ViewBag.CurrentFilter == "Approved")">Approved</option>
+<option value="Rejected" selected="@(ViewBag.CurrentFilter == "Rejected")">Rejected</option>
+        </select>
+    </form>
+</div>
+
+<table>
+    <tr>
+        <th>Doctor</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Action</th> 
+    </tr>
+
+@foreach (var req in Model)
+{
+    <tr>
+        <td>@req.DoctorName</td>
+        <td>@req.RequestType</td>
+        <td>@req.Status</td>
+        <td>
+    <form method="post" action="/Admin/HandleRequest" style="display:inline;">
+        <input type="hidden" name="requestId" value="@req.RequestId" />
+
+        <button class="btn btn-primary"
+                @(req.Status != "Pending" ? "disabled" : "")>
+            Open
+        </button>
+    </form>
+
+    <form method="post" action="/Admin/Reject" style="display:inline;">
+        <input type="hidden" name="requestId" value="@req.RequestId" />
+
+        <button class="btn btn-warning"
+                @(req.Status != "Pending" ? "disabled" : "")>
+            Reject
+        </button>
+    </form>
+</td>
+    </tr>
+}
+</table>

@@ -1,0 +1,135 @@
+@model List<DAMS.Models.Message>
+
+@{
+    var role = ViewBag.Role as string ?? string.Empty;
+    Layout = role == "Admin"
+        ? "~/Views/Shared/_AdminLayout.cshtml"
+        : role == "Doctor"
+            ? "~/Views/Shared/_DoctorLayout.cshtml"
+            : "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<style>
+    .broadcast-page {
+        max-width: 960px;
+        margin: 25px auto;
+    }
+
+    .broadcast-page h2 {
+        margin-bottom: 18px;
+        color: #0f172a;
+    }
+
+    .broadcast-list {
+        display: grid;
+        gap: 12px;
+    }
+
+    .broadcast-item {
+        background: white;
+        border: 1px solid #dbe3ef;
+        border-radius: 8px;
+        padding: 14px 16px;
+    }
+
+    .broadcast-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+
+    .broadcast-content {
+        color: #0f172a;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+    }
+
+    .empty-state {
+        background: white;
+        border: 1px solid #dbe3ef;
+        border-radius: 8px;
+        padding: 20px;
+        color: #475569;
+    }
+</style>
+
+<div class="broadcast-page">
+    <h2>Broadcast Messages</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="broadcast-list" id="broadcastList">
+            @foreach (var message in Model)
+            {
+                <div class="broadcast-item">
+                    <div class="broadcast-meta">
+                        <span>@message.MessageType</span>
+                        <span>@message.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</span>
+                    </div>
+                    <div class="broadcast-content">
+                        @message.Content
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state" id="broadcastList">No broadcast messages found.</div>
+    }
+</div>
+
+<script>
+    const broadcastList = document.getElementById("broadcastList");
+    let lastBroadcastKey = "";
+
+    async function loadBroadcastMessages() {
+        const response = await fetch("/Message/BroadcastMessages");
+
+        if (!response.ok) return;
+
+        const messages = await response.json();
+        renderBroadcastMessages(messages);
+    }
+
+    function renderBroadcastMessages(messages) {
+        const nextKey = messages.map(message => message.messageId).join(",");
+        if (nextKey === lastBroadcastKey) return;
+
+        lastBroadcastKey = nextKey;
+
+        if (!messages.length) {
+            broadcastList.className = "empty-state";
+            broadcastList.innerHTML = "No broadcast messages found.";
+            return;
+        }
+
+        broadcastList.className = "broadcast-list";
+        broadcastList.innerHTML = "";
+
+        messages.forEach(message => {
+            const item = document.createElement("div");
+            item.className = "broadcast-item";
+            item.innerHTML = `
+                <div class="broadcast-meta">
+                    <span>${escapeHtml(message.messageType)}</span>
+                    <span>${escapeHtml(message.createdAtFull)}</span>
+                </div>
+                <div class="broadcast-content">${escapeHtml(message.content)}</div>`;
+            broadcastList.appendChild(item);
+        });
+    }
+
+    function escapeHtml(value) {
+        const div = document.createElement("div");
+        div.innerText = value || "";
+        return div.innerHTML;
+    }
+
+    loadBroadcastMessages();
+    setInterval(loadBroadcastMessages, 3000);
+</script>

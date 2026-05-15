@@ -1,0 +1,182 @@
+﻿@model DAMS.ViewModels.AppointmentFilterVM
+
+@{
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<style>
+    body {
+        background: #f4f6fb;
+        font-family: Arial;
+    }
+
+    h2 {
+        margin-bottom: 15px;
+    }
+
+    /* FILTER BOX */
+    .filter-box {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    select, input[type="date"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .btn-primary {
+        background: #0ea5e9;
+    }
+
+    .btn-message {
+        background: #16a34a;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-disabled {
+        background: #cbd5e1;
+        color: #475569;
+        cursor: default;
+    }
+
+    /* TABLE */
+    .table-container {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #0f172a;
+        color: white;
+        padding: 10px;
+        text-align: left;
+    }
+
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background: #f1f5f9;
+    }
+
+    /* STATUS BADGES */
+    .badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .Booked {
+        background: #dbeafe;
+    }
+
+    .Completed {
+        background: #dcfce7;
+    }
+
+    .InProgress {
+        background: #fde68a;
+    }
+</style>
+
+<h2>Appointments 📋</h2>
+
+<!-- FILTER FORM -->
+<div class="filter-box">
+    <form method="post" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+
+        <select name="status">
+            <option value="">All</option>
+            <option value="Booked">Booked</option>
+            <option value="Completed">Completed</option>
+            <option value="InProgress">InProgress</option>
+        </select>
+
+        <input type="date" name="date" />
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+
+    </form>
+</div>
+
+<!-- TABLE -->
+<div class="table-container">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Patient</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Appointments != null && Model.Appointments.Any())
+            {
+                foreach (var item in Model.Appointments)
+                {
+                    <tr>
+                        <td>#@item.TokenNumber</td>
+                        <td>@item.PatientId</td>
+                        <td>
+                            <span class="badge @item.Status">
+                                @item.Status
+                            </span>
+                        </td>
+                        <td>
+                            @if (item.Status == "Booked")
+                            {
+                                <a class="btn btn-message"
+                                   href="@Url.Action("Chat", "Message", new { patientId = item.PatientId })">
+                                    Message
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-disabled">Message</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" style="text-align:center;">
+                        No appointments found
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

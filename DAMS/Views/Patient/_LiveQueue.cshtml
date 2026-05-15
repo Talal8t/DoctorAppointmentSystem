@@ -1,0 +1,75 @@
+﻿@model List<DAMS.Models.Appointment>
+
+<style>
+    .queue-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .queue-table th {
+            background: #0f172a;
+            color: white;
+            padding: 12px;
+        }
+
+        .queue-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+    .badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+    }
+
+    .inprogress {
+        background: #fde68a;
+    }
+
+    .booked {
+        background: #dbeafe;
+    }
+
+    .completed {
+        background: #dcfce7;
+    }
+</style>
+
+@if (Model == null || !Model.Any())
+{
+    <p style="color:red;">No patients in queue</p>
+}
+else
+{
+    <table class="queue-table">
+
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Patient</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderBy(x => x.TokenNumber))
+            {
+                <tr>
+                    <td>#@item.TokenNumber</td>
+                    <td>@item.PatientId</td>
+
+                    <td>
+                        <span class="badge @item.Status.ToLower()">
+                            @item.Status
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}

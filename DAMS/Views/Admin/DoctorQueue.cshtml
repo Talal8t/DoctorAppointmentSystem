@@ -1,0 +1,40 @@
+﻿@model List<DAMS.Models.Appointment>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>👨‍⚕️ Doctor Queue</h2>
+
+<div class="card">
+    <h3>Current Patient</h3>
+
+    @if (ViewBag.Current != null)
+    {
+        <p>Token: @ViewBag.Current.TokenNumber</p>
+        <p>Status: @ViewBag.Current.Status</p>
+    }
+</div>
+
+<table>
+    <tr>
+        <th>Token</th>
+        <th>Patient</th>
+        <th>Status</th>
+    </tr>
+
+@foreach (var a in Model)
+{
+    <tr>
+        <td>@a.TokenNumber</td>
+        <td>@a.PatientId</td>
+        <td>@a.Status</td>
+    </tr>
+}
+</table>
+
+<style>
+body { font-family: Arial; background:#f4f6fb; }
+.card { background:white; padding:15px; margin-bottom:10px; }
+table { width:100%; background:white; border-collapse:collapse; }
+th { background:#1e293b; color:white; }
+td { padding:10px; border-bottom:1px solid #eee; }
+</style>

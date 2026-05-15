@@ -1,0 +1,93 @@
+﻿@model DAMS.ViewModels.RegisterViewModel
+
+<style>
+    body {
+        background: #f1f5f9;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .register-box {
+        width: 400px;
+        margin: 60px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #10b981;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background: #059669;
+        }
+
+    .error {
+        color: red;
+    }
+
+    .success {
+        color: green;
+        text-align: center;
+    }
+</style>
+
+<div class="register-box">
+    <h2>Register</h2>
+
+    <form asp-action="Register" method="post">
+
+        <label>Name</label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name" class="error"></span>
+
+        <label>Email</label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email" class="error"></span>
+
+        <label>Password</label>
+        <input asp-for="Password" type="password" />
+        <span asp-validation-for="Password" class="error"></span>
+
+        <label>Confirm Password</label>
+        <input asp-for="ConfirmPassword" type="password" />
+        <span asp-validation-for="ConfirmPassword" class="error"></span>
+
+        <button type="submit">Register</button>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <p class="error">@ViewBag.Error</p>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <p class="success">@TempData["Success"]</p>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
